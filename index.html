@@ -1,85 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Salamat — Queen of the Universe</title>
+    
+    <!-- Luxury Typography Profiles -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-<meta charset="UTF-8">
+    <style>
+        /* --- PREMIUM CINEMATIC SYSTEM --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #020208; 
+            overflow: hidden; 
+            width: 100vw; 
+            height: 100vh; 
+            font-family: 'Cinzel', serif; 
+            color: #fcf9f2;
+            perspective: 1000px;
+        }
+        
+        #main-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle at 50% 40%, #0d1127 0%, #04050f 60%, #000000 100%);
+        }
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+        #galaxy-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+            mix-blend-mode: screen;
+        }
 
-<title>For Salamat ❤️</title>
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; pointer-events: none;
+        }
 
-<link rel="stylesheet" href="style.css">
+        /* --- THE ROYAL PORTRAIT WRAPPER --- */
+        #portrait-wrapper {
+            position: absolute; top: 10vh; left: 50%; transform: translateX(-50%) scale(0.7);
+            width: min(38vw, 40vh, 310px); height: min(38vw, 40vh, 310px);
+            opacity: 0;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 5;
+        }
 
+        #portrait-container {
+            width: 100%; height: 100%; border-radius: 50%; position: relative;
+            display: flex; justify-content: center; align-items: center;
+            padding: 8px;
+            background: linear-gradient(135deg, rgba(212,175,55,1) 0%, rgba(10,14,38,1) 40%, rgba(212,175,55,0.8) 100%);
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 175, 55, 0.25);
+        }
+
+        #portrait {
+            width: 100%; height: 100%; border-radius: 50%;
+            object-fit: cover; 
+            object-position: center 20%;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background-color: #05050c; 
+            z-index: 2;
+        }
+
+        #portrait-glow { 
+            position: absolute; width: 130%; height: 130%; 
+            border-radius: 50%; filter: blur(40px); 
+            background: radial-gradient(circle, rgba(212,175,55,0.25) 0%, rgba(150,50,255,0.05) 60%, transparent 100%); 
+            z-index: -1; 
+        }
+        
+        /* --- HIGH-LUXURY TIARA (Elevated & Refined) --- */
+        #crown {
+            position: absolute; 
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55%; height: auto;
+            fill: #d4af37; opacity: 0; z-index: 6;
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.9)) drop-shadow(0 0 8px rgba(212,175,55,0.5));
+        }
+
+        /* --- THE TYPOGRAPHY ENGINE --- */
+        #message-container {
+            position: absolute; bottom: 10vh; left: 50%; transform: translateX(-50%);
+            width: 88vw; max-width: 950px; text-align: center;
+            z-index: 15; pointer-events: none;
+        }
+
+        .story-text {
+            width: 100%; margin: 0 auto;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 5.8vw, 4.2rem); 
+            font-weight: 500;
+            letter-spacing: 6px; 
+            line-height: 1.6; 
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            filter: blur(12px);
+            background: linear-gradient(to right, #ffffff 20%, #f3e5c8 50%, #ffffff 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(255,255,255,0);
+        }
+
+        .sub-text { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-style: italic; 
+            font-weight: 300;
+            font-size: clamp(1.8rem, 4.8vw, 3.2rem); 
+            color: #d1c4ae; 
+            margin-top: 18px;
+            letter-spacing: 2px;
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: initial;
+        }
+
+        /* --- BUTTERFLIES IN MOTION --- */
+        .butterfly {
+            position: absolute; width: 35px; height: 35px; opacity: 0; z-index: 8;
+            filter: drop-shadow(0 0 8px rgba(212,175,55,0.6));
+        }
+        @keyframes flap {
+            0% { transform: scaleX(1); }
+            50% { transform: scaleX(0.2); }
+            100% { transform: scaleX(1); }
+        }
+        .wing-flap { animation: flap 0.16s ease-in-out infinite alternate; transform-origin: center; }
+
+        /* --- SCREEN ADAPTATION RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            #portrait-wrapper { top: 12vh; width: min(55vw, 55vh, 230px); height: min(55vw, 55vh, 230px); }
+            #crown { width: 60%; top: -42px; }
+            #message-container { bottom: 12vh; width: 92vw; }
+            .story-text { letter-spacing: 2px; line-height: 1.4; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="opening">
+<div id="main-container">
+    <canvas id="galaxy-canvas"></canvas>
+    
+    <div id="ui-layer">
+        
+        <!-- Portrait + Crown Stage -->
+        <div id="portrait-wrapper">
+            <!-- Solid Golden Crown with Diamond Architecture -->
+            <svg id="crown" viewBox="0 0 100 100">
+                <path d="M 10 75 L 18 40 L 35 55 L 50 25 L 65 55 L 82 40 L 90 75 Z" fill="#d4af37" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                <polygon points="50,12 57,26 50,40 43,26" fill="#fff" opacity="0.95"/>
+                <circle cx="50" cy="26" r="2.5" fill="#d4af37"/>
+                <circle cx="18" cy="40" r="2" fill="#fff"/>
+                <circle cx="82" cy="40" r="2" fill="#fff"/>
+            </svg>
+            <div id="portrait-container">
+                <div id="portrait-glow"></div>
+                <img id="portrait" src="image.png" alt="Salamat">
+            </div>
+        </div>
 
-    <div id="stars"></div>
+        <!-- Typography Output Terminal -->
+        <div id="message-container">
+            <h1 id="story-message" class="story-text"></h1>
+            <h2 id="story-submessage" class="story-text sub-text"></h2>
+        </div>
 
-    <div id="aurora"></div>
-
-    <div id="moon"></div>
-
-    <div id="clouds"></div>
-
-    <div id="particles"></div>
-
- <div id="butterflies">
-</div>
-
-<div id="hearts"></div>
-
-<div id="shootingStars"></div>
-
-<div id="sparkles"></div>
-
-    <div id="rosePetals"></div>
-
-   <div class="royalContainer">
-
-    <div class="crown">👑</div>
-
-    <div class="photoFrame">
-
-        <img src="salamat.jpg" alt="Salamat">
-
-    </div>
-
-    <div id="message"></div>
-
-</div>
-
-    </div>
-
-</div>
-
-<script src="script.js"></script>
-
-<div id="goldDust"></div>
-<div id="lightRays"></div>
-<div id="glassGlow"></div>
-
-<div id="endingOverlay">
-    <div id="particleHeart"></div>
-
-    <div class="endingText">
-
-        <h1>Thank You, Salamat ❤️</h1>
-
-        <p>
-            You are, and will always remain,
-            my favourite person.
-        </p>
-
-        <span>Keep smiling, my beautiful baby 🥰.</span>
-
+        <!-- Ambient Fluttering Assets -->
+        <svg id="butterfly-1" class="butterfly" viewBox="0 0 50 50">
+            <g class="wing-flap">
+                <path d="M25 25 Q 5 -2 2 22 Q 10 32 25 25" fill="#d4af37" opacity="0.95"/>
+                <path d="M25 25 Q 45 -2 48 22 Q 40 32 25 25" fill="#fff" opacity="0.95"/>
+            </g>
+        </svg>
+        <svg id="butterfly-2" class="butterfly" viewBox="0 0 50 50" style="width: 26px; height: 26px;">
+            <g class="wing-flap">
+                <path d="M25 25 Q 5 -2 2 22 Q 10 32 25 25" fill="#f5eedc" opacity="0.9"/>
+                <path d="M25 25 Q 45 -2 48 22 Q 40 32 25 25" fill="#d4af37" opacity="0.85"/>
+            </g>
+        </svg>
     </div>
 </div>
 
+<script>
+    // --- 1. NEBULAR COSMIC ENGINE ---
+    const canvas = document.getElementById('galaxy-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class CosmicShard {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.size = Math.random() * 1.8 + 0.4;
+            this.speedX = (Math.random() - 0.5) * 0.15;
+            this.speedY = -Math.random() * 0.2 - 0.05;
+            this.opacity = Math.random() * 0.7 + 0.2;
+            this.flicker = Math.random() * 0.02;
+            this.color = Math.random() > 0.7 ? `rgba(212, 175, 55, ${this.opacity})` : `rgba(235, 242, 255, ${this.opacity})`;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.opacity += Math.sin(Date.now() * this.flicker) * 0.05;
+            if (this.y < -10 || this.x < 0 || this.x > width) this.reset();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = Math.random() > 0.9 ? 8 : 0;
+            ctx.shadowColor = "#d4af37";
+            ctx.fill();
+        }
+    }
+
+    const shards = Array.from({ length: 120 }, () => new CosmicShard());
+
+    function renderUniverse() {
+        ctx.clearRect(0, 0, width, height);
+        shards.forEach(s => { s.update(); s.draw(); });
+        requestAnimationFrame(renderUniverse);
+    }
+    renderUniverse();
+
+    // --- 2. LUXURY NARRATIVE EXECUTION MATRIX ---
+    const mainTimeline = gsap.timeline();
+    const storyMsg = document.getElementById('story-message');
+    const storySub = document.getElementById('story-submessage');
+    const portraitWrapper = document.getElementById('portrait-wrapper');
+    const crown = document.getElementById('crown');
+    const b1 = document.getElementById('butterfly-1');
+    const b2 = document.getElementById('butterfly-2');
+
+    const sequence = [
+        { t: "Some moments deserve silence…" },
+        { t: "Everyday…" },
+        { t: "Someone deserves to smile." },
+        { t: "Her name is…", revealHero: true },
+        { t: "Salamat." },
+        { t: "My favourite person." },
+        { t: "My beautiful daughter." },
+        { t: "Thank you for existing." },
+        { t: "Your smile is beautiful." },
+        { t: "Never forget how special you are." },
+        { t: "Keep shining." },
+        { t: "Keep smiling." },
+        { t: "You are appreciated more than you know." },
+        { t: "If a million people loved you,", sub: "I am one of them" },
+        { t: "If one person loved you", sub: "that person is me" },
+        { t: "If nobody loves you…", sub: "then I am no longer in this world" }
+    ];
+
+    sequence.forEach((slide) => {
+        // Step A: Load text contents
+        mainTimeline.add(() => {
+            storyMsg.innerHTML = slide.t;
+            storySub.innerHTML = slide.sub || "";
+        });
+
+        // Step B: Set architectural pre-entrance variables
+        mainTimeline.set([storyMsg, storySub], { opacity: 0, y: 25, scale: 0.98, filter: "blur(12px)" });
+
+        // Step C: Trigger Portrait Reveal on cue
+        if (slide.revealHero) {
+            mainTimeline.to(portraitWrapper, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 2.4, ease: "power3.out" }, "<");
+            mainTimeline.to(crown, { opacity: 1, y: 0, scale: 1, duration: 2.0, ease: "back.out(1.4)" }, "-=1.8");
+            
+            mainTimeline.add(() => {
+                // Infinite Luxury Floating Drift Physics
+                gsap.to(portraitWrapper, { y: -15, duration: 4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+                gsap.to(portraitWrapper, { rotation: 1, duration: 5, ease: "sine.inOut", yoyo: true, repeat: -1 });
+                
+                // Activate Flight Matrix
+                gsap.to([b1, b2], { opacity: 0.9, duration: 2 });
+                startFlight(b1, width * 0.2, height * 0.4);
+                startFlight(b2, width * 0.75, height * 0.5);
+            }, "-=0.6");
+        }
+
+        // Step D: Cinematic Text Entrance Bloom
+        mainTimeline.to(storyMsg, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", textShadow: "0 0 30px rgba(255,255,255,0.4)", duration: 1.0, ease: "power2.out" });
+        if (slide.sub) {
+            mainTimeline.to(storySub, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 1.0, ease: "power2.out" }, "-=0.6");
+        }
+
+        // Step E: Luxurious Breathtaking Reading Rest Space
+        mainTimeline.to({}, { duration: 3.6 });
+
+        // Step F: Ethereal Text Exit Dissolve
+        mainTimeline.to(storyMsg, { opacity: 0, y: -15, filter: "blur(8px)", duration: 0.7, ease: "power2.in" });
+        if (slide.sub) {
+            mainTimeline.to(storySub, { opacity: 0, y: -15, filter: "blur(8px)", duration: 0.7, ease: "power2.in" }, "<");
+        }
+
+        // Step G: Interval Breathing Rhythm
+        mainTimeline.to({}, { duration: 0.4 });
+    });
+
+    // --- 3. BREATH-TAKING GRAND FINALE ---
+    mainTimeline.add(() => {
+        // Spawn Premium Gold Fall Shower
+        for(let i=0; i<100; i++) {
+            let spark = document.createElement('div');
+            spark.style.cssText = `
+                position: absolute; left: ${Math.random()*100}%; top: -5%;
+                width: ${Math.random()*2 + 1}px; height: ${Math.random()*25 + 10}px;
+                background: linear-gradient(to bottom, transparent, #d4af37, #ffffff);
+                opacity: ${Math.random()*0.7 + 0.3}; filter: blur(0.5px);
+                z-index: 22; pointer-events: none;
+            `;
+            document.getElementById('ui-layer').appendChild(spark);
+            gsap.to(spark, { y: window.innerHeight + 100, x: `+=${(Math.random()-0.5)*150}`, duration: 3 + Math.random()*2, delay: Math.random()*2, ease: "none", onComplete: () => spark.remove() });
+        }
+
+        // Draw butterflies close to watch over the portrait setup
+        gsap.to(b1, { x: width/2 - 140, y: height/2 - 200, duration: 5, ease: "power1.inOut" });
+        gsap.to(b2, { x: width/2 + 140, y: height/2 - 120, duration: 5, ease: "power1.inOut" });
+
+        const finalPanel = document.createElement('div');
+        finalPanel.className = 'story-text';
+        finalPanel.style.cssText = `
+            position: absolute; top: 62%; left: 50%; transform: translate(-50%, -50%);
+            width: 85%; z-index: 30; pointer-events: none; opacity: 0; filter: blur(15px);
+            font-size: clamp(1.8rem, 4.8vw, 3.2rem); line-height: 1.7; text-align: center;
+        `;
+        finalPanel.innerHTML = "Keep smiling…<br><br>Because this world became more beautiful the day you were born.<br><br><span style='font-size: 0.75em; color: #d4af37; letter-spacing:3px;'>— Zaroo ❤️</span>";
+        document.getElementById('ui-layer').appendChild(finalPanel);
+        
+        gsap.to(finalPanel, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 2.5, ease: "power2.out" });
+
+        // Slow cinematic fade array to finish
+        gsap.to(finalPanel, { opacity: 0, filter: "blur(8px)", duration: 2.5, delay: 7.0 });
+        gsap.to(portraitWrapper, { opacity: 0, scale: 0.85, filter: "blur(10px)", duration: 2.5, delay: 7.5 });
+        gsap.to([b1, b2], { opacity: 0, duration: 2.0, delay: 8.0 });
+    });
+
+    // --- KINETIC FLIGHT MATRIX ---
+    function startFlight(element, baseLinesX, baseLinesY) {
+        gsap.to(element, { 
+            x: baseLinesX + (Math.random() - 0.5) * 450, 
+            y: baseLinesY + (Math.random() - 0.5) * 350, 
+            duration: 4.5 + Math.random() * 3.5, 
+            ease: "sine.inOut", 
+            rotation: (Math.random() - 0.5) * 70,
+            onComplete: () => {
+                if(gsap.getProperty(element, "opacity") > 0) {
+                    startFlight(element, baseLinesX, baseLinesY);
+                }
+            }
+        });
+    }
+
+    // --- RESET PRIMITIVES ---
+    gsap.set([portraitWrapper, b1, b2, storyMsg, storySub], { opacity: 0 });
+    gsap.set(crown, { opacity: 0, y: -25 });
+</script>
 </body>
-
 </html>
